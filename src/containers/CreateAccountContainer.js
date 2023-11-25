@@ -8,8 +8,7 @@ export const CreateAccountContainer = ({ updateUser }) => {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [firstNamePlaceholder, setFirstNamePlaceholder] = useState("First Name");
-    const [lastNamePlaceholder, setLastNamePlaceholder] = useState("Last Name (optional)");
+    const [isFirstNameFocused, setIsFirstNameFocused] = useState(false);
     const [firstNameEmpty, setFirstNameEmpty] = useState(false);
 
     const navigate = useNavigate();
@@ -18,31 +17,11 @@ export const CreateAccountContainer = ({ updateUser }) => {
 
 const isImagePreloaded = useImagePreload(errorImage);
 
-// First Name
-
-    const handleFirstNameClick = () => {
-        setFirstNamePlaceholder("");
-    };
-
-    const handleLastNameClick = () => {
-        setLastNamePlaceholder("");
-    };
-
-    const handleFirstNameBlur = () => {
-        if (firstName === "") {
-            setFirstNamePlaceholder("First Name");
-        }
-    };
-
-    const handleLastNameBlur = () => {
-        if (lastName === "") {
-            setLastNamePlaceholder("Last Name (optional)");
-        }
-    };
-
 // First Name Error Message
 
     const firstNameError = () => setFirstNameEmpty(true);
+
+// Custom MUI Styles
 
 // Handle Next
 
@@ -57,7 +36,8 @@ const isImagePreloaded = useImagePreload(errorImage);
             firstNameError();
             const firstNameInput = document.getElementById('firstNameInput');
             if (firstNameInput) {
-               firstNameInput.focus(); 
+               firstNameInput.focus();
+               setIsFirstNameFocused(true); 
             }
         }
     };
@@ -68,15 +48,11 @@ const isImagePreloaded = useImagePreload(errorImage);
             setFirstName={setFirstName}
             setLastName={setLastName}
             lastName={lastName}
-            firstNamePlaceholder={firstNamePlaceholder}
-            lastNamePlaceholder={lastNamePlaceholder}
-            handleFirstNameClick={handleFirstNameClick}
-            handleLastNameClick={handleLastNameClick}
-            handleFirstNameBlur={handleFirstNameBlur}
-            handleLastNameBlur={handleLastNameBlur}
             handleNextClick={handleNextClick}
             firstNameEmpty={firstNameEmpty}
             isImagePreloaded={isImagePreloaded}
+            isFirstNameFocused={isFirstNameFocused}
+            setIsFirstNameFocused={setIsFirstNameFocused}
         />
     </>
  );

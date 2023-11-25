@@ -142,7 +142,7 @@ body {
 
 .gap {
   margin-top: 10px;
-  margin-bottom: 22px;
+  margin-bottom: 25px;
 }
 
 h1 {
@@ -166,7 +166,7 @@ form {
 }
 
 #google-writing {
-  margin-top: 121px;
+  margin-top: 101px;
   margin-bottom: 15px;
   height: auto;
   width: 72px;
@@ -386,11 +386,23 @@ p {
   flex-direction: column;
 }
 
+.last-name-margin-top {
+  margin-top: 15px !important;
+}
+
 .button-right {
   display: flex;
   width: 363px;
   justify-content: flex-end;
   margin-bottom: 145px;
+}
+
+.button-right-first-name-empty {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  margin-bottom: 119px;
 }
 
 .hidden-error-message-container-create-account {
@@ -559,7 +571,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .button-space {
-  margin: 2px 1.5px 20px 0;
+  margin: 7px 1.5px 20px 0;
 }
 
 /* Choose Your Gmail Address */
@@ -780,7 +792,7 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 13.33px;
   width: 13.33px;
   filter: hue-rotate(359deg); /* Rotate 30 degrees towards red */
-  margin-bottom: 7.5px; margin-top: 1px; 
+  margin: 1px 0 7.5px 2px;
 }
 
 #reduce-width-h2 {
@@ -806,14 +818,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .button-space-create-password {
    margin: 30px 1.5px 0 0;
-}
-
-.error-div {
-  width: 90%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: -5.75px;
 }
 
 /* Confirm Youre Not a Robot */

@@ -1,54 +1,85 @@
 import React from 'react';
 import errorImage from '../images/Daco_5575399.png';
-import googleWritingSvg from '../images/google-writing-svg.svg';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 export const CreateAccountcomponent = ({ 
     firstName,
     setFirstName,
     lastName,
     setLastName,
-    firstNamePlaceholder,
-    lastNamePlaceholder,
-    handleFirstNameClick,
-    handleLastNameClick,
-    handleFirstNameBlur,
-    handleLastNameBlur,
     handleNextClick,
     firstNameEmpty,
-    isImagePreloaded
+    isImagePreloaded,
+    isFirstNameFocused,
+    setIsFirstNameFocused
+
 }) => {
 
     return (
         <form>
 
-                <h1 class="thin h1-space">Create a Google Account</h1>
+            <h1 class="thin h1-space">Create a Google Account</h1>
+            <h2 class='thin gap'>Enter your name</h2>
 
-                <h2 class='thin gap'>Enter your name</h2>
-
-            <label class="space line-height label-input-width input-label">
-                <input 
-                    id='firstNameInput'
-                    class={`${firstNameEmpty ? 'error' : "input"}`}
-                    type='text' 
-                    value={firstName} 
-                    onChange={(e) => setFirstName(e.target.value)} 
-                    placeholder={firstNamePlaceholder}
-                    onFocus={handleFirstNameClick}
-                    onBlur={handleFirstNameBlur}
-                />
-            </label>
-     
-            <label class="space line-height label-input-width input-label">
-                <input 
-                    class="input disable-eye-icon"
+            <Box
+                component="form"
+                sx={{
+                    '& > :not(style)': { m: 1.25},
+                    width: 363,
+                    maxWidth: '100%',
+                }}
+            >
+                {firstNameEmpty ? (<TextField 
+                    error
+                    id="firstNameInput" 
+                    label="First Name" 
+                    variant="outlined" 
+                    fullWidth
+                    type='text'
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    onFocus={() => setIsFirstNameFocused(true)}
+                    onBlur={() => setIsFirstNameFocused(false)}
+                    InputLabelProps={{
+                        style: {
+                            color: isFirstNameFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)',
+                        },
+                    }}
+                />) : (<TextField 
+                    sx={{
+                        "& .MuiOutlinedInput-root": {
+                            "&:hover:not(.Mui-focused) fieldset": {
+                              borderColor: "#c4c4c4"
+                            }
+                        }
+                    }}
+                    id="firstNameInput" 
+                    label="First Name" 
+                    variant="outlined" 
+                    fullWidth
+                    type='text'
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    
+                />)}
+                <TextField 
+                    label="Last Name (optional)"
+                    className='last-name-margin-top' 
+                    variant="outlined" 
+                    fullWidth
                     type='text'
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder={lastNamePlaceholder}
-                    onFocus={handleLastNameClick}
-                    onBlur={handleLastNameBlur}
-                />
-            </label>
+                    sx={{
+                        "& .MuiOutlinedInput-root": {
+                            "&:hover:not(.Mui-focused) fieldset": {
+                              borderColor: "#c4c4c4"
+                            },
+                        },
+                    }}
+                />       
+            </Box>
 
             {firstNameEmpty && isImagePreloaded ? (
                 <div class='error-div'>
@@ -59,7 +90,7 @@ export const CreateAccountcomponent = ({
                 <div className='hidden-error-message-container-create-account'></div>
             )}
             
-            <div class='button-right'>
+            <div class={firstNameEmpty ? 'button-right-first-name-empty' : 'button-right'}>
                 <button type='button' class="button-space blue-button" onClick={handleNextClick}>
                     Next   
                 </button>
