@@ -5,15 +5,17 @@ import TextField from '@mui/material/TextField';
 
 export const CreateAccountcomponent = ({ 
     firstName,
-    setFirstName,
     lastName,
-    setLastName,
     handleNextClick,
-    firstNameEmpty,
     isImagePreloaded,
     isFirstNameFocused,
-    setIsFirstNameFocused
-
+    CustomNextButton,
+    onFirstNameInputChange,
+    onLastNameInputChange,
+    handleFirstNameBlur,
+    toggleIsNameFocused,
+    errorCondition,
+    isFirstNameBiggerThan0
 }) => {
 
     return (
@@ -30,70 +32,82 @@ export const CreateAccountcomponent = ({
                     maxWidth: '100%',
                 }}
             >
-                {firstNameEmpty ? (<TextField 
-                    error
-                    id="firstNameInput" 
-                    label="First Name" 
-                    variant="outlined" 
-                    fullWidth
-                    type='text'
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    onFocus={() => setIsFirstNameFocused(true)}
-                    onBlur={() => setIsFirstNameFocused(false)}
-                    InputLabelProps={{
-                        style: {
-                            color: isFirstNameFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)',
-                        },
-                    }}
-                />) : (<TextField 
-                    sx={{
-                        "& .MuiOutlinedInput-root": {
-                            "&:hover:not(.Mui-focused) fieldset": {
-                              borderColor: "#c4c4c4"
+                {errorCondition === "firstNameEmpty" || errorCondition === "areYouSureCorrect" ? (
+                    <TextField 
+                        error
+                        id="firstNameInput" 
+                        label="First Name" 
+                        variant="outlined" 
+                        fullWidth
+                        value={firstName}
+                        onChange={onFirstNameInputChange}
+                        InputLabelProps={{
+                            style: {
+                                color: isFirstNameBiggerThan0 ? '#d32f2f' : (isFirstNameFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)'),
+                            },
+                        }}
+                        onBlur={handleFirstNameBlur}
+                        onFocus={toggleIsNameFocused}
+                    />
+                ) : (
+                    <TextField 
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                "&:hover:not(.Mui-focused) fieldset": {
+                                borderColor: "#dadce0"
+                                },
+                                "& fieldset": {
+                                    borderColor: "#dadce0"
+                                },
                             }
-                        }
-                    }}
-                    id="firstNameInput" 
-                    label="First Name" 
-                    variant="outlined" 
-                    fullWidth
-                    type='text'
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    
-                />)}
+                        }}
+                        id="firstNameInput" 
+                        label="First Name" 
+                        variant="outlined" 
+                        fullWidth
+                        value={firstName}
+                        onChange={onFirstNameInputChange}
+                        
+                    />
+                )}
                 <TextField 
                     label="Last Name (optional)"
                     className='last-name-margin-top' 
                     variant="outlined" 
                     fullWidth
-                    type='text'
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={onLastNameInputChange}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             "&:hover:not(.Mui-focused) fieldset": {
-                              borderColor: "#c4c4c4"
+                              borderColor: "#dadce0"
+                            },
+                            "& fieldset": {
+                                borderColor: "#dadce0"
                             },
                         },
                     }}
                 />       
             </Box>
 
-            {firstNameEmpty && isImagePreloaded ? (
+            {errorCondition === "firstNameEmpty" && isImagePreloaded ? (
                 <div class='error-div'>
                     <img className='error-image' src={errorImage} alt='Error Image' />
                     <p class="input-error-message">Enter first name</p>
                 </div>
+            ) : errorCondition === "areYouSureCorrect" && isImagePreloaded ? (
+                <div class='error-div'>
+                    <img className='error-image' src={errorImage} alt='Error Image' />
+                    <p class="input-error-message">Are you sure you entered your name correctly?</p>
+                </div>
             ) : (
                 <div className='hidden-error-message-container-create-account'></div>
-            )}
-            
-            <div class={firstNameEmpty ? 'button-right-first-name-empty' : 'button-right'}>
-                <button type='button' class="button-space blue-button" onClick={handleNextClick}>
-                    Next   
-                </button>
+            )} 
+
+            <div class={errorCondition === "firstNameEmpty" || errorCondition === "areYouSureCorrect" ? 'button-right-first-name-empty' : 'button-right'}>
+                <CustomNextButton variant="contained" onClick={handleNextClick}>
+                    Next
+                </CustomNextButton>
             </div>
 
         </form>

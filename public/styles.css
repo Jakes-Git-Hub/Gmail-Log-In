@@ -81,7 +81,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(219, 219, 219);
+  border: 1px solid #dadce0;
   border-radius: 10px;
   flex-direction: column;
   width: 448.18px;
@@ -94,7 +94,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(219, 219, 219);
+  border: 1px solid #dadce0;
   border-radius: 10px;
   flex-direction: column;
   width: 448.18px;
@@ -107,7 +107,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(219, 219, 219);
+  border: 1px solid #dadce0;
   border-radius: 10px;
   flex-direction: column;
   width: 448.18px;
@@ -166,7 +166,7 @@ form {
 }
 
 #google-writing {
-  margin-top: 101px;
+  margin-top: 81px;
   margin-bottom: 15px;
   height: auto;
   width: 72px;
@@ -422,6 +422,14 @@ p {
   display: flex;
 }
 
+.css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  cursor: default !important;
+}
+
+.label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
 .error-third {
   border-radius: 4px;
   outline: none !important;
@@ -434,10 +442,35 @@ p {
   display: flex;
 }
 
-.third-container {
+.hidden-error-message-container-BI {
+  height: 32.5px; /* Adjust the height as needed */
+}
+
+#error-div-space-basic-info {
+  width: 90%;
+  margin: 5px;
+}
+
+.button-right-BI {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin-bottom: 145px;
+}
+
+.button-right-error-BI {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  margin-bottom: 119px;
+}
+
+.third-container-basic-information {
   width: 90%;
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
 }
 
 .input-label-third {
@@ -564,10 +597,6 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 95%;
   display: flex;
   width: calc(32.5% - 10px);
-}
-
-#gender-space {
-  margin: 8px 0 13px 0;
 }
 
 .button-space {

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { BirthdayAndGenderComponent } from '../components/BirthdayAndGenderComponent';
 import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
@@ -10,15 +12,12 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     const [day, setDay] = useState("");
     const [year, setYear] = useState("");
     const [gender, setGender] = useState("");
-    const [monthPlaceholder, setMonthPlaceholder] = useState("Month");
-    const [dayPlaceholder, setDayPlaceholder] = useState("Day");
-    const [yearPlaceholder, setYearPlaceholder] = useState("Year");
-    const [genderPlaceholder, setGenderPlaceholder] = useState("Gender");
-    const [incompleteBirthday, setIncompleteBirthday] = useState(false);
     const [genderEmpty, setGenderEmpty] = useState(false);
-    const [isMonthSelected, setIsMonthSelected] = useState(false);
     const [errorCondition, setErrorCondition] = useState(null);
-    const [isGenderSelected, setIsGenderSelected] = useState(false);
+    const [isMonthFocused, setIsMonthFocused] = useState(false);
+    const [isDayFocused, setIsDayFocused] = useState(false);
+    const [isYearFocused, setIsYearFocused] = useState(false);
+    const [isGenderFocused, setIsGenderFocused] = useState(false);
 
     const navigate = useNavigate();
 
@@ -26,35 +25,19 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
 // Month
 
-    const handleMonthClick = () => {
-        setMonthPlaceholder("");
-    };
-
-    const handleMonthBlur = () => {
-        if (month === "") {
-            setMonthPlaceholder("Month");
-        }
-    };
-
     const handleSelectMonth = (event) => {
         setMonth(event.target.value);
-        setMonthPlaceholder("");
-        setIsMonthSelected(true);
+    };
+
+    const toggleIsMonthFocused = () => {
+            setIsMonthFocused(true);
+    }
+
+    const handleMonthBlur = () => {
+        setIsMonthFocused(false); 
     };
 
 // Day
-
-    const handleDayClick = () => {
-        setDayPlaceholder("");
-    };
-
-    const handleDayBlur = () => {
-        if (day === "") {
-            setDayPlaceholder("Day");
-        }
-    };
-
-    
 
     const handleSelectDay = (event) => {
         const inputDay = event.target.value;
@@ -64,18 +47,15 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         }
     };
 
+    const toggleIsDayFocused = () => {
+        setIsDayFocused(true);
+    }
+
+    const handleDayBlur = () => {
+        setIsDayFocused(false); 
+    };
 
 // Year
-
-    const handleYearClick = () => {
-        setYearPlaceholder("");
-    };
-
-    const handleYearBlur = () => {
-        if (year === "") {
-            setYearPlaceholder("Year");
-        }
-    };
 
     const handleSelectYear = (event) => {
         const inputYear = event.target.value;
@@ -85,21 +65,26 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         }
     };
 
+    const toggleIsYearFocused = () => {
+        setIsYearFocused(true);
+    }
+
+    const handleYearBlur = () => {
+        setIsYearFocused(false); 
+    };
+
 // Gender
-
-    const handleGenderClick = () => {
-        setGenderPlaceholder("");
-        setIsGenderSelected(true);
-    };
-
-    const handleGenderBlur = () => {
-        if (gender === "") {
-            setGenderPlaceholder("Gender");
-        }
-    };
 
     const handleSelectGender = (event) => {
         setGender(event.target.value);
+    };
+
+    const toggleIsGenderFocused = () => {
+        setIsGenderFocused(true);
+    }
+
+    const handleGenderBlur = () => {
+        setIsGenderFocused(false); 
     };
 
 // Error Messages
@@ -115,52 +100,68 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     const handleNextClick = () => {
         const isBirthdayEmpty = month === '' || day === '' || year === '';
         const isGenderEmpty = gender === '';
-        setErrorCondition(null);
+        const numericDay = +day;
+        const numericYear = +year;
         if (isBirthdayEmpty) {
             birthdayError();
         } if (isGenderEmpty) {
             genderError();
         } if (!isBirthdayEmpty && !isGenderEmpty) {
             updateUser({month: month, day: day, year: year, gender: gender})
-            setMonth('');
-            setDay('');
-            setYear('');
-            setGender('');
             navigate('/choose-your-gmail-address')
-        } if ((typeof day === 'string' || typeof year === 'string') && (day !== '' || year !== '')) {
+        } if (isNaN(numericDay) || isNaN(numericYear)) {
             wrongFormat();
         }
     };
 
+// Custom MUI Button Styles and Functions
+
+const CustomNextButton = styled(Button)({
+    backgroundColor: 'rgb(26,115,232)',
+    border: '2px solid rgb(26,115,232)',
+    color: 'white',
+    padding: '3px 21.59px',
+    fontSize: '15px',
+    '&:hover': {
+        backgroundColor: 'rgb(34 106 202)',
+        boxShadow: ('0 1px 2px 0 rgba(60, 64, 67, .3)', 
+                    '0 1px 3px 1px rgba(60, 64, 67, .15)'),
+        border: '2px solid rgb(34 106 202)',    
+        '& .MuiTouchRipple-child': {
+            backgroundColor: 'rgb(33 88 161)', // Change this to your desired ripple color
+          },
+    },
+    textTransform: 'none',
+    margin: 'margin: 7px 1.5px 20px 0;'
+});
+
     return (
         <BirthdayAndGenderComponent
             month={month}
-            monthPlaceholder={monthPlaceholder}
-            handleMonthClick={handleMonthClick}
             handleMonthBlur={handleMonthBlur}
             handleSelectMonth={handleSelectMonth}
             day={day}
-            dayPlaceholder={dayPlaceholder}
-            handleDayClick={handleDayClick}
             handleDayBlur={handleDayBlur}
             handleSelectDay={handleSelectDay}
             year={year}
-            yearPlaceholder={yearPlaceholder}
-            handleYearClick={handleYearClick}
             handleYearBlur={handleYearBlur}
             handleSelectYear={handleSelectYear}
             gender={gender}
-            genderPlaceholder={genderPlaceholder}
             handleGenderBlur={handleGenderBlur}
-            handleGenderClick={handleGenderClick}
             handleSelectGender={handleSelectGender}
             handleNextClick={handleNextClick}
-            incompleteBirthday={incompleteBirthday}
             isImagePreloaded={isImagePreloaded}
             genderEmpty={genderEmpty}
-            isMonthSelected={isMonthSelected}
-            isGenderSelected={isGenderSelected}
             errorCondition={errorCondition}
+            toggleIsMonthFocused={toggleIsMonthFocused}
+            isMonthFocused={isMonthFocused}
+            toggleIsDayFocused={toggleIsDayFocused}
+            isDayFocused={isDayFocused}
+            toggleIsYearFocused={toggleIsYearFocused}
+            isYearFocused={isYearFocused}
+            toggleIsGenderFocused={toggleIsGenderFocused}
+            isGenderFocused={isGenderFocused}
+            CustomNextButton={CustomNextButton}
         />
     );
 }
