@@ -31,7 +31,10 @@ export const BirthdayAndGenderComponent = ({
     isYearFocused,
     toggleIsGenderFocused,
     isGenderFocused,
-    CustomNextButton
+    CustomNextButton,
+    stateOfMonth,
+    stateOfDay,
+    stateOfYear
 
 }) => {
     
@@ -44,13 +47,13 @@ export const BirthdayAndGenderComponent = ({
 
             <div class='third-container-basic-information'>
 
-                <Box sx={{ width: 'calc(32.5% - 10px)' }}>
+                <Box sx={{ width: 'calc(32.5% - 2px)' }}>
                     <FormControl fullWidth error={errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat' ? true : false}>
-                        <InputLabel className={(errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat') && isMonthFocused ? "label-input-error" : 'label'}>Month</InputLabel>
+                        <InputLabel className={(errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat') && isMonthFocused ? "label-input-error" : (errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat') && stateOfMonth === 'selectedMonth' ? "label-input-error" : !errorCondition ? '' : 'label'}>Month</InputLabel>
                         <Select
                             value={month}
                             label="Month"
-                            onChange={handleSelectMonth}
+                            onChange={(e) => handleSelectMonth(e, year, day)}
                             onFocus={toggleIsMonthFocused}
                             onBlur={handleMonthBlur}
                             native="true"
@@ -71,19 +74,19 @@ export const BirthdayAndGenderComponent = ({
                                 },
                             }}
                         >
-                            <option className="select-dropdown-MenuItems" value="" hidden></option>
-                            <option className="select-dropdown-MenuItems" value="January">January</option>
-                            <option className="select-dropdown-MenuItems" value="February">February</option>
-                            <option className="select-dropdown-MenuItems" value="March">March</option>
-                            <option className="select-dropdown-MenuItems" value="April">April</option>
-                            <option className="select-dropdown-MenuItems" value="May">May</option>
-                            <option className="select-dropdown-MenuItems" value="June">June</option>
-                            <option className="select-dropdown-MenuItems" value="July">July</option>
-                            <option className="select-dropdown-MenuItems" value="August">August</option>
-                            <option className="select-dropdown-MenuItems" value="September">September</option>
-                            <option className="select-dropdown-MenuItems" value="October">October</option>
-                            <option className="select-dropdown-MenuItems" value="Novemeber">Novemeber</option>
-                            <option className="select-dropdown-MenuItems" value="December">December</option>
+                            <option value="" hidden></option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
                         </Select>
                     </FormControl>
                 </Box>
@@ -93,13 +96,13 @@ export const BirthdayAndGenderComponent = ({
                         fullWidth error={errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat' ? true : false}
                         value={day}
                         label="Day"
-                        onChange={handleSelectDay}
+                        onChange={(e) => handleSelectDay(e, year, month)}
                         onFocus={toggleIsDayFocused}
                         onBlur={handleDayBlur}
                         maxLength="2"
                         InputLabelProps={{
                             style: {
-                                color: isDayFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)',
+                                color: isDayFocused && errorCondition ? '#d32f2f' : errorCondition && stateOfDay === 'notEmpty' ? '#d32f2f' : isDayFocused && !errorCondition ? '' : 'rgba(0, 0, 0, 0.6)',
                             },
                         }}
                         sx={{
@@ -120,13 +123,13 @@ export const BirthdayAndGenderComponent = ({
                         fullWidth error={errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat' ? true : false}
                         value={year}
                         label="Year"
-                        onChange={handleSelectYear}
+                        onChange={(e) => handleSelectYear(e, day, month)}
                         onFocus={toggleIsYearFocused}
                         onBlur={handleYearBlur}
                         maxLength="4"
                         InputLabelProps={{
                             style: {
-                                color: isYearFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)',
+                                color: isYearFocused && errorCondition ? '#d32f2f' : errorCondition && stateOfYear === 'notEmpty' ? '#d32f2f' : isYearFocused && !errorCondition ? '' : 'rgba(0, 0, 0, 0.6)',
                             },
                         }}
                         sx={{
@@ -149,21 +152,19 @@ export const BirthdayAndGenderComponent = ({
                     <img className='error-image' src={errorImage} alt='Error Image' />
                     <p class="input-error-message">Please fill in a complete birthday</p>
                 </div>
-            ) : (
-                <div className='hidden-error-message-container-create-account'></div>
-            )}            
-
-            {errorCondition === 'isWrongFormat' && isImagePreloaded && (
+            ) : errorCondition === 'isWrongFormat' && isImagePreloaded ? (
                 <div class='error-div' id='error-div-space-basic-info'>
                     <img className='error-image' src={errorImage} alt='Error Image' />
                     <p class="input-error-message">Please enter a valid date</p>
                 </div>
-            )}
+            ) : (
+                <div className='hidden-error-message-container-create-account'></div>
+            )}            
 
             <div class='line-height gender-input-width' id='gender-space'>
                 <Box>
                     <FormControl fullWidth error={genderEmpty ? true : false}>
-                        <InputLabel className={genderEmpty && isGenderFocused ? "label-input-error" : 'label'}>Gender</InputLabel>
+                        <InputLabel className={genderEmpty && isGenderFocused ? "label-input-error" : !genderEmpty ? '' : 'label'}>Gender</InputLabel>
                         <Select
                             value={gender}
                             label="Gender"
@@ -174,7 +175,7 @@ export const BirthdayAndGenderComponent = ({
                             sx={{
                                 "&:hover:not(.Mui-focused)": {
                                     "&& fieldset": {
-                                        borderColor: errorCondition === 'incompleteBirthday' || errorCondition === 'isWrongFormat' ? "" : "#dadce0",
+                                        borderColor: genderEmpty ? "" : "#dadce0",
                                     },
                                 },
                                 ".MuiOutlinedInput-notchedOutline": {
@@ -188,11 +189,11 @@ export const BirthdayAndGenderComponent = ({
                                 },
                             }}
                         >
-                            <option className="select-dropdown-MenuItems" value="" hidden></option>
-                            <option className="select-dropdown-options" value="Female">Female</option>
-                            <option className="select-dropdown-options" value="Male">Male</option>
-                            <option className="select-dropdown-options" value="Rather ">Rather not say</option>
-                            <option className="select-dropdown-options" value="Custom">Custom</option>
+                            <option value="" hidden></option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Rather ">Rather not say</option>
+                            <option value="Custom">Custom</option>
                         </Select>
                     </FormControl>
                 </Box>

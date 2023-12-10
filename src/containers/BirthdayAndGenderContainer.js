@@ -18,6 +18,9 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     const [isDayFocused, setIsDayFocused] = useState(false);
     const [isYearFocused, setIsYearFocused] = useState(false);
     const [isGenderFocused, setIsGenderFocused] = useState(false);
+    const [stateOfMonth, setStateOfMonth] = useState(null);
+    const [stateOfDay, setStateOfDay] = useState(null);
+    const [stateOfYear, setStateOfYear] = useState(null);
 
     const navigate = useNavigate();
 
@@ -25,12 +28,16 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
 // Month
 
-    const handleSelectMonth = (event) => {
+    const handleSelectMonth = (event, day, year) => {
         setMonth(event.target.value);
+        setStateOfMonth('selectedMonth')
+        if (day && year) {
+            setErrorCondition(null);
+        }
     };
 
     const toggleIsMonthFocused = () => {
-            setIsMonthFocused(true);
+        setIsMonthFocused(true);
     }
 
     const handleMonthBlur = () => {
@@ -39,11 +46,20 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
 // Day
 
-    const handleSelectDay = (event) => {
+    const handleSelectDay = (event, year, month) => {
         const inputDay = event.target.value;
         const maxDayLength = 2;
         if (inputDay.length <= maxDayLength) {
             setDay(inputDay);
+            if (month && year) {
+                setErrorCondition(null);
+            } 
+        }
+        if (inputDay.length === 0) {
+            setStateOfDay('empty')
+        }
+        if (inputDay.length !== 0) {
+            setStateOfDay('notEmpty')
         }
     };
 
@@ -57,11 +73,18 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
 // Year
 
-    const handleSelectYear = (event) => {
+    const handleSelectYear = (event, day, month) => {
         const inputYear = event.target.value;
         const maxYearLength = 4;
         if (inputYear.length <= maxYearLength) {
             setYear(inputYear);
+            setStateOfYear('notEmpty');
+            if (month && day) {
+                setErrorCondition(null);
+            }
+        }
+        if (inputYear.length === 0) {
+            setStateOfYear('empty')
         }
     };
 
@@ -77,6 +100,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 
     const handleSelectGender = (event) => {
         setGender(event.target.value);
+        setGenderEmpty(false);
     };
 
     const toggleIsGenderFocused = () => {
@@ -98,23 +122,23 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
 // Handle Next Click
 
     const handleNextClick = () => {
-        const isBirthdayEmpty = month === '' || day === '' || year === '';
         const isGenderEmpty = gender === '';
         const numericDay = +day;
         const numericYear = +year;
+        const isBirthdayEmpty = month === '' || day === '' || year === '';
         if (isBirthdayEmpty) {
             birthdayError();
         } if (isGenderEmpty) {
             genderError();
-        } if (!isBirthdayEmpty && !isGenderEmpty) {
+        } if (!isBirthdayEmpty && !isGenderEmpty && day === isNaN(numericDay && year === isNaN(numericYear)) ) {
             updateUser({month: month, day: day, year: year, gender: gender})
             navigate('/choose-your-gmail-address')
         } if (isNaN(numericDay) || isNaN(numericYear)) {
             wrongFormat();
-        }
+        } if (month === '') {
+            setStateOfMonth('emptyMonth')
+        } 
     };
-
-// Custom MUI Button Styles and Functions
 
 const CustomNextButton = styled(Button)({
     backgroundColor: 'rgb(26,115,232)',
@@ -162,6 +186,9 @@ const CustomNextButton = styled(Button)({
             toggleIsGenderFocused={toggleIsGenderFocused}
             isGenderFocused={isGenderFocused}
             CustomNextButton={CustomNextButton}
+            stateOfMonth={stateOfMonth}
+            stateOfDay={stateOfDay}
+            stateOfYear={stateOfYear}
         />
     );
 }

@@ -455,15 +455,16 @@ p {
   display: flex;
   width: 363px;
   justify-content: flex-end;
-  margin-bottom: 145px;
+  margin-bottom: 125px;
+  margin-top: 20px;
 }
 
 .button-right-error-BI {
   display: flex;
   width: 363px;
   justify-content: flex-end;
-  margin-top: 25px;
-  margin-bottom: 119px;
+  margin-top: 40px;
+  margin-bottom: 85px;
 }
 
 .third-container-basic-information {

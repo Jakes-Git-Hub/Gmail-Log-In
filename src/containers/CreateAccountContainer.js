@@ -30,6 +30,8 @@ export const CreateAccountContainer = ({ updateUser }) => {
         setIsFirstNameFocused(true);
     }
 
+// First Name Errors
+
     const firstNameError = () => setErrorCondition("firstNameEmpty");
 
     const unsureNameIsCorrect = () => setErrorCondition("areYouSureCorrect");
@@ -43,6 +45,7 @@ export const CreateAccountContainer = ({ updateUser }) => {
         if (isLetters(value)) {
           setFirstName(value);
         }
+        // Conditionally Style Label
         if (value.length > 0) {
             setIsFirstNameBiggerThan0(true);
         }
