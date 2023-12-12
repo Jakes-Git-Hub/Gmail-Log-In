@@ -133,7 +133,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         } if (!isBirthdayEmpty && !isGenderEmpty && day === isNaN(numericDay && year === isNaN(numericYear)) ) {
             updateUser({month: month, day: day, year: year, gender: gender})
             navigate('/choose-your-gmail-address')
-        } if (isNaN(numericDay) || isNaN(numericYear)) {
+        } if (isNaN(numericDay) || isNaN(numericYear) || year.length < 4) {
             wrongFormat();
         } if (month === '') {
             setStateOfMonth('emptyMonth')

@@ -6,6 +6,7 @@ import errorImage from '../images/Daco_5575399.png';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
+
 export const CreateAccountContainer = ({ updateUser }) => {
 
     const [firstName, setFirstName] = useState("");
@@ -22,25 +23,11 @@ export const CreateAccountContainer = ({ updateUser }) => {
 
 // First Name
 
-    const handleFirstNameBlur = () => {
-        setIsFirstNameFocused(false); 
-    }
-
-    const toggleIsNameFocused = () => {
-        setIsFirstNameFocused(true);
-    }
-
-// First Name Errors
-
-    const firstNameError = () => setErrorCondition("firstNameEmpty");
-
-    const unsureNameIsCorrect = () => setErrorCondition("areYouSureCorrect");
-
-// Only Allow String Values to be Inputted
+    // Allow Only String Values to be Inputted
 
     const isLetters = (str) => /^[A-Za-z]*$/.test(str);
 
-    const onFirstNameInputChange = (e) => {
+    const onFirstNameInputChange = (e,) => {
         const { value } = e.target;
         if (isLetters(value)) {
           setFirstName(value);
@@ -54,14 +41,21 @@ export const CreateAccountContainer = ({ updateUser }) => {
         }
     };
 
+// First Name Errors
+
+    const firstNameError = () => setErrorCondition("firstNameEmpty");
+
+    const unsureNameIsCorrect = () => setErrorCondition("areYouSureCorrect");
+
+// Last Name - Allow Only Letters
+
     const onLastNameInputChange = (e) => {
-        const { value } = e.target;
-        if (isLetters(value)) {
-          setLastName(value);
+        if (isLetters(e.target.value)) {
+            setLastName(e.target.value);
         }
     };
 
-// Custom MUI Button Styles and Functions
+// Custom MUI Styles
 
     const CustomNextButton = styled(Button)({
         backgroundColor: 'rgb(26,115,232)',
@@ -80,18 +74,19 @@ export const CreateAccountContainer = ({ updateUser }) => {
         },
         textTransform: 'none',
         margin: 'margin: 7px 1.5px 20px 0;'
-    });
+    }); 
 
 // Handle Next
 
     const handleNextClick = () => {
+        const firstNameInput = document.getElementById('firstNameInput');
+
         if (firstName !== '' && firstName.length > 2) {
             setErrorCondition(null);
             updateUser({ firstName: firstName, lastName: lastName });
             navigate('/basic-information');
+            console.log(firstName);
         } 
-
-        const firstNameInput = document.getElementById('firstNameInput');
 
         if (firstName.length > 0 && firstName.length <= 2) {
             unsureNameIsCorrect();
@@ -123,8 +118,6 @@ export const CreateAccountContainer = ({ updateUser }) => {
                 CustomNextButton={CustomNextButton}
                 onFirstNameInputChange={onFirstNameInputChange}
                 onLastNameInputChange={onLastNameInputChange}
-                handleFirstNameBlur={handleFirstNameBlur}
-                toggleIsNameFocused={toggleIsNameFocused}
                 errorCondition={errorCondition}
                 isFirstNameBiggerThan0={isFirstNameBiggerThan0}
             />

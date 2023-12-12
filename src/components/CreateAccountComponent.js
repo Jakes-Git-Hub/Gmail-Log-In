@@ -8,14 +8,11 @@ export const CreateAccountcomponent = ({
     lastName,
     handleNextClick,
     isImagePreloaded,
-    isFirstNameFocused,
     CustomNextButton,
     onFirstNameInputChange,
     onLastNameInputChange,
-    handleFirstNameBlur,
-    toggleIsNameFocused,
     errorCondition,
-    isFirstNameBiggerThan0
+    isFirstNameBiggerThan0,
 }) => {
 
     return (
@@ -42,12 +39,13 @@ export const CreateAccountcomponent = ({
                         value={firstName}
                         onChange={onFirstNameInputChange}
                         InputLabelProps={{
-                            style: {
-                                color: isFirstNameBiggerThan0 ? '#d32f2f' : (isFirstNameFocused ? '#d32f2f' : 'rgba(0, 0, 0, 0.6)'),
+                            sx: {
+                                color: isFirstNameBiggerThan0 ? '#d32f2f' : 'rgba(0, 0, 0, 0.6) !important',
+                                '&.Mui-focused': {
+                                  color: '#d32f2f !important',
+                                },
                             },
                         }}
-                        onBlur={handleFirstNameBlur}
-                        onFocus={toggleIsNameFocused}
                     />
                 ) : (
                     <TextField 
@@ -67,7 +65,6 @@ export const CreateAccountcomponent = ({
                         fullWidth
                         value={firstName}
                         onChange={onFirstNameInputChange}
-                        
                     />
                 )}
                 <TextField 
