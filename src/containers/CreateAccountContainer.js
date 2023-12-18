@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { CreateAccountcomponent } from "../components/CreateAccountComponent";
 import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 
 
 export const CreateAccountContainer = ({ updateUser }) => {
@@ -13,7 +11,6 @@ export const CreateAccountContainer = ({ updateUser }) => {
     const [lastName, setLastName] = useState("");
     const [isFirstNameFocused, setIsFirstNameFocused] = useState(false);
     const [errorCondition, setErrorCondition] = useState(null);
-    const [isFirstNameBiggerThan0, setIsFirstNameBiggerThan0] = useState(false);
 
     const navigate = useNavigate();
 
@@ -32,13 +29,6 @@ export const CreateAccountContainer = ({ updateUser }) => {
         if (isLetters(value)) {
           setFirstName(value);
         }
-        // Conditionally Style Label
-        if (value.length > 0) {
-            setIsFirstNameBiggerThan0(true);
-        }
-        if (value.length === 0) {
-            setIsFirstNameBiggerThan0(false);
-        }
     };
 
 // First Name Errors
@@ -54,27 +44,6 @@ export const CreateAccountContainer = ({ updateUser }) => {
             setLastName(e.target.value);
         }
     };
-
-// Custom MUI Styles
-
-    const CustomNextButton = styled(Button)({
-        backgroundColor: 'rgb(26,115,232)',
-        border: '2px solid rgb(26,115,232)',
-        color: 'white',
-        padding: '3px 21.59px',
-        fontSize: '15px',
-        '&:hover': {
-            backgroundColor: 'rgb(34 106 202)',
-            boxShadow: ('0 1px 2px 0 rgba(60, 64, 67, .3)', 
-                        '0 1px 3px 1px rgba(60, 64, 67, .15)'),
-            border: '2px solid rgb(34 106 202)',    
-            '& .MuiTouchRipple-child': {
-                backgroundColor: 'rgb(33 88 161)', // Change this to your desired ripple color
-              },
-        },
-        textTransform: 'none',
-        margin: 'margin: 7px 1.5px 20px 0;'
-    }); 
 
 // Handle Next
 
@@ -115,11 +84,9 @@ export const CreateAccountContainer = ({ updateUser }) => {
                 isImagePreloaded={isImagePreloaded}
                 isFirstNameFocused={isFirstNameFocused}
                 setIsFirstNameFocused={setIsFirstNameFocused}
-                CustomNextButton={CustomNextButton}
                 onFirstNameInputChange={onFirstNameInputChange}
                 onLastNameInputChange={onLastNameInputChange}
                 errorCondition={errorCondition}
-                isFirstNameBiggerThan0={isFirstNameBiggerThan0}
             />
         </>
     );

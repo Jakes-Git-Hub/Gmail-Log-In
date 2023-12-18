@@ -2,17 +2,16 @@ import React from 'react';
 import errorImage from '../images/Daco_5575399.png';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import CustomNextButton from './CustomNextButton';
 
 export const CreateAccountcomponent = ({ 
     firstName,
     lastName,
     handleNextClick,
     isImagePreloaded,
-    CustomNextButton,
     onFirstNameInputChange,
     onLastNameInputChange,
     errorCondition,
-    isFirstNameBiggerThan0,
 }) => {
 
     return (
@@ -29,44 +28,40 @@ export const CreateAccountcomponent = ({
                     maxWidth: '100%',
                 }}
             >
-                {errorCondition === "firstNameEmpty" || errorCondition === "areYouSureCorrect" ? (
-                    <TextField 
-                        error
-                        id="firstNameInput" 
-                        label="First Name" 
-                        variant="outlined" 
-                        fullWidth
-                        value={firstName}
-                        onChange={onFirstNameInputChange}
-                        InputLabelProps={{
+                <TextField 
+                    error={errorCondition}
+                    id="firstNameInput" 
+                    label="First Name" 
+                    variant="outlined" 
+                    fullWidth
+                    value={firstName}
+                    onChange={onFirstNameInputChange}
+                    InputLabelProps={
+                        errorCondition ? 
+                        { 
                             sx: {
-                                color: isFirstNameBiggerThan0 ? '#d32f2f' : 'rgba(0, 0, 0, 0.6) !important',
+                                color: firstName ? '#d32f2f' : 'rgba(0, 0, 0, 0.6) !important',
                                 '&.Mui-focused': {
-                                  color: '#d32f2f !important',
+                                    color: '#d32f2f !important',
                                 },
                             },
-                        }}
-                    />
-                ) : (
-                    <TextField 
-                        sx={{
+                        } : {}
+                    }
+                    sx={
+                        errorCondition ? 
+                        {} : 
+                        {
                             "& .MuiOutlinedInput-root": {
                                 "&:hover:not(.Mui-focused) fieldset": {
-                                borderColor: "#dadce0"
+                                    borderColor: "#dadce0"
                                 },
                                 "& fieldset": {
                                     borderColor: "#dadce0"
                                 },
                             }
-                        }}
-                        id="firstNameInput" 
-                        label="First Name" 
-                        variant="outlined" 
-                        fullWidth
-                        value={firstName}
-                        onChange={onFirstNameInputChange}
-                    />
-                )}
+                        }
+                    }
+                />
                 <TextField 
                     label="Last Name (optional)"
                     className='last-name-margin-top' 
@@ -102,7 +97,15 @@ export const CreateAccountcomponent = ({
             )} 
 
             <div class={errorCondition === "firstNameEmpty" || errorCondition === "areYouSureCorrect" ? 'button-right-first-name-empty' : 'button-right'}>
-                <CustomNextButton variant="contained" onClick={handleNextClick}>
+                <CustomNextButton 
+                    variant="contained" 
+                    onClick={handleNextClick}
+                    sx={{
+                        '&& .MuiTouchRipple-rippleVisible': {
+                            animationDuration: '300ms',
+                        },
+                    }}
+                >
                     Next
                 </CustomNextButton>
             </div>

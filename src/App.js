@@ -84,11 +84,9 @@ const { userIP } = useUserIP()
           } 
         />
         <Route path="/basic-information" element={
-            <StaticElementContainer>
               <BirthdayAndGenderContainer
                 updateUser={updateUser} 
               />
-            </StaticElementContainer>
           } 
         />
         <Route path="/choose-your-gmail-address" element={
