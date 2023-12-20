@@ -420,12 +420,11 @@ p {
   flex-direction: column;
   width: 448.18px;
   min-width: 448.18px;
-  height: 501px;
   position: relative;
 }
 
 #google-writing-BG {
-  margin-top: 81px;
+  margin-top: 49px;
   margin-bottom: 15px;
   height: auto;
   width: 72px;
@@ -463,28 +462,28 @@ p {
 }
 
 .hidden-error-message-container-BI {
-  height: 32.5px; /* Adjust the height as needed */
+  height: 18.4px; 
 }
 
 #error-div-space-basic-info {
   width: 90%;
-  margin: 5px;
+  margin: 5px 5px 9.25px 5px;
 }
 
 .button-right-BI {
   display: flex;
   width: 363px;
   justify-content: flex-end;
-  margin-bottom: 125px;
-  margin-top: 20px;
+  margin-bottom: 80px;
+  margin-top: 50px;
 }
 
 .button-right-error-BI {
   display: flex;
   width: 363px;
   justify-content: flex-end;
-  margin-top: 40px;
-  margin-bottom: 85px;
+  margin-top: 50px;
+  margin-bottom: 60px;
 }
 
 .third-container-basic-information {

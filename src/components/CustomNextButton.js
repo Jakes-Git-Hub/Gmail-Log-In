@@ -2,22 +2,20 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
 const CustomNextButton = styled(Button)({
-    backgroundColor: 'rgb(26,115,232)',
-    border: '2px solid rgb(26,115,232)',
+    backgroundColor: '#1a73e8',
     color: 'white',
-    padding: '3px 21.59px',
+    padding: '5px 23.59px',
     fontSize: '15px',
+    boxShadow: "none",
     '&:hover': {
         backgroundColor: 'rgb(34 106 202)',
-        boxShadow: ('0 1px 2px 0 rgba(60, 64, 67, .3)', 
-                    '0 1px 3px 1px rgba(60, 64, 67, .15)'),
-        border: '2px solid rgb(34 106 202)',    
+        boxShadow: ('0px 3px 1px -2px rgba(0,0,0,0.2)', '0px 2px 2px 0px rgba(0,0,0,0.14)', '0px 1px 5px 0px rgba(0,0,0,0.12)'),    
         '& .MuiTouchRipple-child': {
-            backgroundColor: 'rgb(33 88 161)', // Change this to your desired ripple color
-          },
+            backgroundColor: 'rgb(30 81 147)', // Change this to your desired ripple color
+        },
     },
     textTransform: 'none',
     margin: 'margin: 7px 1.5px 20px 0;'
-}); 
+});
 
 export default CustomNextButton;

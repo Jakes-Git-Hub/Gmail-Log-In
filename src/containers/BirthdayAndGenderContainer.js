@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { BirthdayAndGenderComponent } from '../components/BirthdayAndGenderComponent';
 import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import googleWritingSvg from "../images/google-writing-svg.svg";
 
 export const BirthdayAndGenderContainer = ({ updateUser }) => {
@@ -16,16 +14,17 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     const [genderEmpty, setGenderEmpty] = useState(false);
     const [errorCondition, setErrorCondition] = useState(null);
     const [isImageLoaded, setIsImageLoaded] = useState(false);  
-    const [isCustomChecked, setIsCustomChecked] = useState(false);
+    const [isCustomChecked, setIsCustomChecked] = useState(false); 
     const [customGender, setCustomGender] = useState("");
-    const [isWhatsYourCustomGenderInputEmpty, setIsWhatsYourCustomGenderInputEmpty] = useState(false);
-
+    const [customGenderEmpty, setCustomGenderEmpty] = useState("");
+    const [pronoun, setPronoun] = useState("");
+    const [pronounEmpty, setPronounEmpty] = useState("");
 
     const navigate = useNavigate();
 
     const isImagePreloaded = useImagePreload(errorImage);
 
-    // Checks if Google SVG is Loaded, to Render All at Once
+    // Checks if Google SVG is Loaded, to Render all at Once
 
     useEffect(() => {
         const image = new Image();
@@ -72,12 +71,22 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     const handleSelectGender = (event) => {
         setGender(event.target.value);
         setGenderEmpty(false);
+        if (event.target.value === 'Custom') {
+            setIsCustomChecked(true)
+        }
     };
 
 // Custom Gender
 
     const handleSelectCustomGender = (e) => {
         setCustomGender(e.target.value);
+    };
+
+// Pronoun
+
+    const handleSelectPronoun = (e) => {
+        setPronoun(e.target.value);
+        setPronounEmpty(false);
     };
 
 // Error Messages
@@ -88,6 +97,10 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
     
     const genderError = () => setGenderEmpty(true);
 
+    const customGenderError = () => setCustomGenderEmpty(true);
+
+    const pronounError = () => setPronounEmpty(true);
+
 // Handle Next Click
 
     const handleNextClick = () => {
@@ -96,6 +109,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         const numericYear = +year;
         const isBirthdayEmpty = month === '' || day === '' || year === '';
         const isCustomGenderEmpty = customGender === '';
+        const isPronounEmpty = pronoun === '';
         if (isBirthdayEmpty) {
             birthdayError();
         } if (isGenderEmpty) {
@@ -105,29 +119,15 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
             navigate('/choose-your-gmail-address')
         } if (!isBirthdayEmpty && (isNaN(numericDay) || isNaN(numericYear) || year.length < 4)) {
             wrongFormat();
-        } if (isCustomGenderEmpty) {
-            setIsWhatsYourCustomGenderInputEmpty(true)
+        } if (isCustomGenderEmpty && isCustomChecked) {
+            customGenderError();
+        } if (customGender) {
+            setCustomGenderEmpty(false);
+        } if (isPronounEmpty && isCustomChecked) {
+            pronounError();
         }
+        
     };
-
-// Custom MUI Styles
-
-    const CustomNextButton = styled(Button)({
-        backgroundColor: '#1a73e8',
-        color: 'white',
-        padding: '5px 23.59px',
-        fontSize: '15px',
-        boxShadow: "none",
-        '&:hover': {
-            backgroundColor: 'rgb(34 106 202)',
-            boxShadow: ('0px 3px 1px -2px rgba(0,0,0,0.2)', '0px 2px 2px 0px rgba(0,0,0,0.14)', '0px 1px 5px 0px rgba(0,0,0,0.12)'),    
-            '& .MuiTouchRipple-child': {
-                backgroundColor: 'rgb(30 81 147)', // Change this to your desired ripple color
-            },
-        },
-        textTransform: 'none',
-        margin: 'margin: 7px 1.5px 20px 0;'
-    });
 
     return (
         <BirthdayAndGenderComponent
@@ -143,11 +143,14 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
             isImagePreloaded={isImagePreloaded}
             genderEmpty={genderEmpty}
             errorCondition={errorCondition}
-            CustomNextButton={CustomNextButton}
             isImageLoaded={isImageLoaded}
             customGender={customGender}
-            isWhatsYourCustomGenderInputEmpty={isWhatsYourCustomGenderInputEmpty}
             handleSelectCustomGender={handleSelectCustomGender}
+            customGenderEmpty={customGenderEmpty}
+            pronounEmpty={pronounEmpty}
+            pronoun={pronoun}
+            handleSelectPronoun={handleSelectPronoun}
+            isCustomChecked={isCustomChecked}
         />
     );
 };
