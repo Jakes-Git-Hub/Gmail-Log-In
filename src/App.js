@@ -21,6 +21,12 @@ function App() {
   const [nextUserId, setNextUserId] = useState(1);
   const [userData, setUserData] = useState({});
 
+// Test
+
+useEffect(() => { 
+  setUsers(prevUsers => [...prevUsers, { id: 0, email: 'tester@gmail.com', password: 'test' }]);
+}, []);
+
 // Grab User's IP
 
 const { userIP } = useUserIP()
@@ -93,6 +99,7 @@ const { userIP } = useUserIP()
             <StaticElementContainer>
               <ChooseYourGmailAddressContainer
                 updateUser={updateUser} 
+                users={users}
               />
             </StaticElementContainer>
           } 

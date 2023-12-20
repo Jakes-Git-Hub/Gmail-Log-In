@@ -296,11 +296,7 @@ p {
 }
 
 .input-label {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: center;
-  justify-content: center;
+  width: 90%;
 }
 
 /* Blue Snake Loader */
@@ -640,11 +636,12 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .static-position {
   position: absolute; 
-  right: 30px;
-  top: 50%;
+  right: 60px;
+  top: 47.8%;
   transform: translateY(-50%);
-  font-size: 0.8em;
+  font-size: 0.875em;
   font-weight: 200;
+  color: rgb(32,33,36);
 }
 
 .center {
@@ -655,7 +652,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: flex;
   width: 363px;
   justify-content: flex-end;
-  margin-bottom: 170px;
+  margin: 20px 0 150px 0;
 }
 
 #h2 {
@@ -693,10 +690,18 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .input-error-message {
   color: rgb(217,48,37);
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   font-weight: 200;
   margin: 1px 0 7.5px 10px;
 }
+
+.input-error-message-6-30 {
+  color: rgb(217,48,37);
+  font-size: 0.72rem;
+  font-weight: 200;
+  margin: 1px 0 7.5px 10px;
+}
+
 .error-div {
   width: 90%;
   display: flex;

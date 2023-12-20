@@ -72,7 +72,9 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         setGender(event.target.value);
         setGenderEmpty(false);
         if (event.target.value === 'Custom') {
-            setIsCustomChecked(true)
+            setIsCustomChecked(true);
+        } else {
+            setIsCustomChecked(false);
         }
     };
 
@@ -115,7 +117,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         } if (isGenderEmpty) {
             genderError();
         } if (!isBirthdayEmpty && !isGenderEmpty && !isNaN(numericDay) && !isNaN(numericYear)) {
-            updateUser({month: month, day: day, year: year, gender: gender})
+            updateUser({month: month, day: day, year: year, gender: gender, customGender: customGender, pronoun: pronoun})
             navigate('/choose-your-gmail-address')
         } if (!isBirthdayEmpty && (isNaN(numericDay) || isNaN(numericYear) || year.length < 4)) {
             wrongFormat();
