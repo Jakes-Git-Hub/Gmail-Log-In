@@ -8,8 +8,6 @@ export const CreatePasswordContainer = ({ updateUser }) => {
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordPlaceholder, setPasswordPlaceholder] = useState("Password");
-    const [confirmPlaceholder, setConfirmPlaceholder] = useState("Confirm");
     const [showPassword, setShowPassword] = useState(false);
     const [errorCondition, setErrorCondition] = useState(null);
 
@@ -19,14 +17,8 @@ export const CreatePasswordContainer = ({ updateUser }) => {
     
 // Password
 
-    const handlePasswordClick = () => {
-        setPasswordPlaceholder("");
-    };
-
-    const handlePasswordBlur = () => {
-        if (password === "") {
-            setPasswordPlaceholder("Password");
-        }
+    const handleSelectPassword = (e) => {
+        setPassword(e.target.value);
     };
 
     const handleTogglePassword = () => {
@@ -35,14 +27,8 @@ export const CreatePasswordContainer = ({ updateUser }) => {
 
 // Confirm
 
-    const handleConfirmClick = () => {
-        setConfirmPlaceholder("");
-    };
-
-    const handleConfirmBlur = () => {
-        if (confirmPassword === "") {
-          setConfirmPlaceholder("Confirm");
-        }
+    const handleSelectConfirmPassword = (e) => {
+        setConfirmPassword(e.target.value);     
     };
 
 // Error messages
@@ -63,59 +49,71 @@ export const CreatePasswordContainer = ({ updateUser }) => {
         }
     };
     
-    const bothPasswordAndConfirmEmpty = () => {
-        if (password === '' && confirmPassword === '') {
-        setErrorCondition("passwordAndConfirmEmpty");
-        } else {
-        setErrorCondition(null);
-        }
-    };
+    const passwordEmpty = () => setErrorCondition("passwordEmpty");
 
+
+    const needs8CharsOrMore = () => setErrorCondition("needs8CharsOrMore");
+
+    
+    const passwordIsntStrongEnough = () => setErrorCondition("pleaseChooseAStrongerPassword");
 
 
 // Handle Next
 
     const handleNextClick = () => {
-        if (password === confirmPassword && password !== '' && confirmPassword !== '') {
+        const passwordInput = document.getElementById('passwordInput');
+        const sufficientPasswordStrength = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const checkIfPasswordIsStrongEnough = () => {
+            const passwordTest = sufficientPasswordStrength.test(password);
+            const confirmPasswordTest = sufficientPasswordStrength.test(confirmPassword);
+            if (!passwordTest && !confirmPasswordTest) {
+                passwordIsntStrongEnough();
+                console.log("not fine");
+                return false;
+            } else {
+                console.log("fine");
+                return true;
+            }
+        }
+        checkIfPasswordIsStrongEnough();
+        if (password === confirmPassword && password !== '' && confirmPassword !== '' && checkIfPasswordIsStrongEnough()) {
         updateUser({ password: password });
         setPassword('');
         setConfirmPassword('');
         setErrorCondition(null);
         navigate('/confirm-youre-not-a-robot');
-        } else if (password === '' && confirmPassword === '') {
-            bothPasswordAndConfirmEmpty();
-            const passwordInput = document.getElementById('passwordInput');
-            if (passwordInput) {
-                passwordInput.focus();
+        } if (password.length >= 8) {
+            if (errorCondition === "passwordEmpty" || errorCondition === "needs8CharsOrMore") {
+                setErrorCondition(null);
             }
-        } else if (password !== '' && confirmPassword === "") {
+        } if (password === '') {
+            passwordEmpty();
+            passwordInput.focus();
+        } if (password.length < 8 && password !== '') {
+            needs8CharsOrMore();
+            passwordInput.focus();
+        } if (password !== '' && password.length >= 8 && confirmPassword === "") {
             confirmYourPassword();
             const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-            if (confirmPasswordInput) {
-                confirmPasswordInput.focus();
-            }
-        } else if (password !== confirmPassword && password !== "" && confirmPassword !== '') {
+            confirmPasswordInput.focus();
+        } if (password !== confirmPassword && password !== "" && confirmPassword !== '') {
             passwordMismatch();
-        }
-    };
+        } 
+    }
 
  return(
     <>
         <CreatePasswordComponent
             password={password}
             setPassword={setPassword}
+            handleSelectPassword={handleSelectPassword}
             confirmPassword={confirmPassword}
+            handleSelectConfirmPassword={handleSelectConfirmPassword}
             setConfirmPassword={setConfirmPassword}
-            passwordPlaceholder={passwordPlaceholder}
-            handlePasswordClick={handlePasswordClick}
-            handlePasswordBlur={handlePasswordBlur}
-            confirmPlaceholder={confirmPlaceholder}
-            handleConfirmClick={handleConfirmClick}
-            handleConfirmBlur={handleConfirmBlur}
             handleNextClick={handleNextClick}
             showPassword={showPassword}
             setShowPassword={setShowPassword}
-            togglePassword={handleTogglePassword}
+            handleTogglePassword={handleTogglePassword}
             confirmYourPassword={confirmYourPassword}
             passwordMismatch={passwordMismatch}
             isImagePreloaded={isImagePreloaded}

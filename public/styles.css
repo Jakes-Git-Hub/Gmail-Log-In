@@ -684,6 +684,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Create Password */
 
+.create-password-h2 {
+  width: 98%;
+}
+
 #error-message-margin {
   margin: 13px 0 0 0;
 }
@@ -716,7 +720,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .password-toggle {
-  width: 91%;
+  width: 95%;
   margin: 2px 0 0 1.5px;
 }
 
@@ -776,21 +780,9 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: rgb(26, 115, 232);
 }
 
-.password-toggle.checked .custom-checkbox-label:hover::before {
-    background-color: rgb(226 239 255); 
-}
-
-.password-toggle.checked-and-click-off .custom-checkbox-label::before {
-    background-color: transparent; /* Change background color to light blue when checked */
-}
-
 .custom-checkbox-label.checked-and-click-off input[type="checkbox"]:checked + .custom-checkbox {
   border-color: rgb(26, 115, 232); 
   background-color: rgb(26, 115, 232);
-}
-
-.password-toggle.checked .custom-checkbox-label-after-sequence::before {
-    background-color: transparent; /* Change background color to light blue when checked */
 }
 
 .password-space {
@@ -860,12 +852,21 @@ input[type="number"]::-webkit-outer-spin-button {
 #show-password-checkbox {
   font-size: 0.85em;
   font-weight: 500;
+  margin-left: 7px;
 }
 
 #create-password-error-div {
   width: 90%;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  margin-top: 7px;
+}
+
+#create-password-error-div-stronger-password {
+  width: 90%;
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   margin-top: 7px;
 }

@@ -30,24 +30,24 @@ export const ChooseYourGmailAddressContainer = ({ updateUser, users }) => {
 
 // Handle Next Click
 
-const handleNextClick = () => {
-    setEmail(email)
-    if (email === '') {
-      const usernameInput = document.getElementById('usernameInput');
-      usernameEmpty();
-      usernameInput.focus();
-    } else if (!/^[a-zA-Z0-9.]+$/.test(email)) {
-      // Check if the email contains unallowed characters
-      unallowedChars();
-    } else if (email.length < 6 || email.length > 30) {
-      incorrectLength();
-    } else if (users.find(user => user.email === email + '@gmail.com')) {
-      usernameIsAlreadyTaken();
-    } else {
-      updateUser({ email: email })
-      navigate('/create-password')
-    }
-};
+  const handleNextClick = () => {
+      setEmail(email)
+      if (email === '') {
+        const usernameInput = document.getElementById('usernameInput');
+        usernameEmpty();
+        usernameInput.focus();
+      } else if (!/^[a-zA-Z0-9.]+$/.test(email)) {
+        // Check if the email contains unallowed characters
+        unallowedChars();
+      } else if (email.length < 6 || email.length > 30) {
+        incorrectLength();
+      } else if (users.find(user => user.email === email + '@gmail.com')) {
+        usernameIsAlreadyTaken();
+      } else {
+        updateUser({ email: email })
+        navigate('/create-password')
+      }
+  };
 
     return (
         <>
