@@ -112,6 +112,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         const isBirthdayEmpty = month === '' || day === '' || year === '';
         const isCustomGenderEmpty = customGender === '';
         const isPronounEmpty = pronoun === '';
+        const isValidDate = !isNaN(numericDay) && !isNaN(numericYear) && new Date(year, month - 1, numericDay).getMonth() === +month - 1;
         if (isBirthdayEmpty) {
             birthdayError();
         } if (isGenderEmpty) {
@@ -119,7 +120,7 @@ export const BirthdayAndGenderContainer = ({ updateUser }) => {
         } if (!isBirthdayEmpty && !isGenderEmpty && !isNaN(numericDay) && !isNaN(numericYear)) {
             updateUser({month: month, day: day, year: year, gender: gender, customGender: customGender, pronoun: pronoun})
             navigate('/choose-your-gmail-address')
-        } if (!isBirthdayEmpty && (isNaN(numericDay) || isNaN(numericYear) || year.length < 4)) {
+        } if (!isBirthdayEmpty && (isNaN(numericDay) || isNaN(numericYear) || year.length < 4 || !isValidDate)) {
             wrongFormat();
         } if (isCustomGenderEmpty && isCustomChecked) {
             customGenderError();

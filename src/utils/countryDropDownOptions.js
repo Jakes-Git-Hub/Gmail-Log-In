@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const countries = [
     {
         name: 'Andorra',
@@ -1523,17 +1521,19 @@ populateSvgForCountries(countries);
 export const filteredCountries = countries.filter(country => country.dialingCode !== '');
 
 export const customOptions = filteredCountries.map((country) => ({
-      value: country.dialingCode,
+      value: country,
       label: (
         <div>
-          <img
-            src={require(`../images/flags/${country.svg}`)}
-            className="flag-image"
-            alt={`${country.name} flag`}
-          />
-          <span className='country-option'>
-            {country.name} ({country.dialingCode})
-          </span>
+            <div className="flex">
+                <img
+                    src={require(`../images/flags/${country.svg}`)}
+                    className="flag-image"
+                    alt={`${country.name} flag`}
+                />
+                <span className='country-option'>
+                    {country.name} ({country.dialingCode})
+                </span>
+            </div>
         </div>
       ),
 }));

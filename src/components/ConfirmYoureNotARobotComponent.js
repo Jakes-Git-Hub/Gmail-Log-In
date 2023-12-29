@@ -18,6 +18,10 @@ export const ConfirmYoureNotARobotComponent = ({
     usersCountryFlagSVG,
     customStyles,
     CustomDropdownIndicator,
+    placeholderContent,
+    setSelectedOption,
+    selectedOption,
+    chosenCountryFlagImage,  
 }) => {
 
     return (
@@ -28,35 +32,15 @@ export const ConfirmYoureNotARobotComponent = ({
             <h2 class='thin gap-cynar center' id='font-and-color-cynar-h2'>Get a verification code sent to your phone</h2>
 
             <div id='add-phone-number-dropdown-and-input'>
-                {usersCountryFlagSVG ? (
                     <Select
                         styles={customStyles}
                         class="flag-drop-down"
                         options={customOptions}
-                        components={{ DropdownIndicator: CustomDropdownIndicator}}
-                        placeholder={<img
-                                        src={require(`../images/flags/${usersCountryFlagSVG}`)}
-                                        alt="Flag"
-                                        width="24"
-                                        height="16"
-                                    />
-                        }
+                        components={{ DropdownIndicator: CustomDropdownIndicator, chosenCountryFlagImage }}
+                        placeholder={placeholderContent}
+                        onChange={setSelectedOption}
+                        value={selectedOption}
                     />
-                ) : (
-                    <Select
-                        styles={customStyles}
-                        class="flag-drop-down"
-                        options={customOptions}
-                        components={{ DropdownIndicator: CustomDropdownIndicator}}
-                        placeholder={<img
-                                        src={GBSVG}
-                                        alt="Flag"
-                                        width="24"
-                                        height="16"
-                                    />
-                        }
-                    />
-                )}
 
                 <label class="space-phone-number-input-cynar line-height label-input-width input-label" id='phoneNumber-input-width'>
                     <div class='placeholder-satic-cohersion-phone-number'>

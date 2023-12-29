@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AddPhoneNumberComponent } from '../components/AddPhoneNumberComponent';
 import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
-import { countries, customOptions } from '../utils/addPhoneNumberDropDownOptionsObject';
+import { countries, customOptions } from '../utils/countryDropDownOptions';
 import axios from 'axios';
 import dropDownImageSVG from '../images/drop-down-svg.svg';
 

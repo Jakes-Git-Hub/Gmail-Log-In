@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { ConfirmYoureNotARobotComponent } from '../components/ConfirmYoureNotARobotComponent';
 import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
-import { countries } from '../utils/addPhoneNumberDropDownOptionsObject';
+import { countries } from '../utils/countryDropDownOptions';
 import axios from 'axios';
 import dropDownImageSVG from '../images/drop-down-svg.svg';
-import { customOptions } from '../utils/addPhoneNumberDropDownOptionsObject';
+import { customOptions } from '../utils/countryDropDownOptions';
+import GBSVG from '../images/flags/gb2.svg';
 
 export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) => {
 
@@ -17,6 +18,7 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
     const [isIncorrectFormat, setIsIncorrectFormat] = useState(false);
     const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
     const [usersCountryFlagSVG, setUsersCountryFlagSVG] = useState('');
+    const [selectedOption, setSelectedOption] = useState(null);
     const [usersCountry, setUsersCountry] = useState('');
     // const [customOptions, setCustomOptions] = useState([]);
 
@@ -98,20 +100,33 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
 
 // Custom Components
 
-const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
-    const defaultColor = '#000';
-  
-    return (
-      <components.DropdownIndicator {...innerProps} { ...rest }>
-        <img
-          src={dropDownImageSVG}
-          alt="Dropdown Indicator"
-          className={`svg dropdown-indicator ${menuIsOpen ? 'open' : ''}`}
-          style={{ fill: defaultColor }}
-        />
-      </components.DropdownIndicator>
-    );
-  };
+    const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
+        const defaultColor = '#000';
+    
+        return (
+        <components.DropdownIndicator {...innerProps} { ...rest }>
+            <img
+            src={dropDownImageSVG}
+            alt="Dropdown Indicator"
+            className={`svg dropdown-indicator ${menuIsOpen ? 'open' : ''}`}
+            style={{ fill: defaultColor }}
+            />
+        </components.DropdownIndicator>
+        );
+    };
+
+    const chosenCountryFlagImage = ({ children, ...props }) => {
+        return (
+        <components.SingleValue {...props}>
+            <img
+                src={require(`../images/flags/${props.data.value.svg}`)}
+                className="flag-image"
+                alt={`${props.data.value.name} flag`}
+                id="react-select-2-placeholder"
+            />
+        </components.SingleValue>
+        );
+    };
 
 // Custom React Select Styles
 
@@ -140,8 +155,8 @@ const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
         }),
         dropdownIndicator: (provided, state)=> ({
             ...provided,
-            width: '32.5px', // Adjust the width to fit your image
-            height: '20px', // Adjust the height to fit your image
+            width: '32.5px',
+            height: '20px',
             transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null,
             padding: '0px',
             justifyContent: 'center',
@@ -164,33 +179,53 @@ const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
             ...provided,
             display: 'flex',
             justifyContent: 'center',
-            backGroundColor: 'red'
         }),
-        // more styles
         input: (provided) => ({
             ...provided,
-            caretColor: 'transparent', // Hide the blinking cursor
+            caretColor: 'transparent',
         }),
         valueContainer: provided => ({
             ...provided,
             display: 'flex',
             flexWrap: 'nowrap',
-            alignContent: 'center',
+            alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row-reverse',
         }),
         placeholder: provided => ({
             ...provided,
             marginTop: '2px',
-        })
+        }),
+        singleValue: provided => ({
+            ...provided,
+            marginTop: '2px',
+            minHeight: "100%",
+            minWidth: "100%",
+        }),
     }
   
 // Handle Skip
 
-    const handleSkip = () => {
-        setPhoneNumber('');
-        navigate('/review-your-account-info');
-    };
+    const handleSkip = () => navigate('/review-your-account-info');
+
+
+// Placeholder Content
+
+    const placeholderContent = usersCountryFlagSVG ? (
+        <img
+            src={require(`../images/flags/${usersCountryFlagSVG}`)}
+            alt="Flag"
+            width="24"
+            height="16"
+        />
+    ) : (
+        <img    
+            src={GBSVG} 
+            alt="Flag" 
+            width="24" 
+            height="16" 
+        />
+    );
 
     return (
         <>
@@ -212,7 +247,11 @@ const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
                 userIP={userIP}
                 usersCountryFlagSVG={usersCountryFlagSVG}
                 CustomDropdownIndicator={CustomDropdownIndicator}
+                chosenCountryFlagImage={chosenCountryFlagImage}
                 setPhoneNumber={setPhoneNumber}
+                placeholderContent={placeholderContent}
+                setSelectedOption={setSelectedOption}
+                selectedOption={selectedOption}
             />
         </>
     )
