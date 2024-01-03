@@ -6,21 +6,21 @@ import useImagePreload from "../hooks/useImagePreload";
 import errorImage from '../images/Daco_5575399.png';
 import { countries } from '../utils/countryDropDownOptions';
 import axios from 'axios';
-import dropDownImageSVG from '../images/drop-down-svg.svg';
-import { customOptions } from '../utils/countryDropDownOptions';
+import dropDownImageSVG from '../images/gmail-drop-down-svg.svg';
 import GBSVG from '../images/flags/gb2.svg';
+import googleWritingSvg from "../images/google-writing-svg.svg";
 
 export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) => {
 
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [phoneNumberPlaceholder, setPhoneNumberPlaceholder] = useState("Phone Number");
-    const [isPhoneNumberEmpty, setIsPhoneNumberEmpty] = useState(false);
-    const [isIncorrectFormat, setIsIncorrectFormat] = useState(false);
-    const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
+    const [errorCondition, setErrorCondition] = useState(null);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);  
     const [usersCountryFlagSVG, setUsersCountryFlagSVG] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
-    const [usersCountry, setUsersCountry] = useState('');
-    // const [customOptions, setCustomOptions] = useState([]);
+    const [actualSelectedOption, setActualSelectedOption] = useState(null);
+    const [filteredCountries, setFilteredCountries] = useState(countries);
+    const [topOption, setTopOption] = useState(null);
+    const [countryFromAPI, setCountryFromAPI] = useState({});
 
     const navigate = useNavigate();
 
@@ -28,19 +28,29 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
 
     const isImagePreloaded = useImagePreload(errorImage);
 
+    useEffect(() => {
+        const image = new Image();
+        image.src = googleWritingSvg;
+        image.onload = () => {
+          setIsImageLoaded(true);
+        };
+    }, []);
+
 // Get User's Country from IP and Set Placeholder SVG Based on it
 
     useEffect(() => { 
         if (userIP) {
             const apiKey = 'b2ef0251b1264f88ae869467dfe144d8';
 
-            axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}&ip=200.7.98.19`)
+            axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}&ip=102.217.238.0`)
             .then((response) => {
                 const countryFromIP = response.data.country_name;
                 const matchingCountry = countries.find(country => country.name === countryFromIP);
                 if (matchingCountry) {
                     setUsersCountryFlagSVG(matchingCountry.svg);
-                    setUsersCountry(matchingCountry);
+                    setCountryFromAPI({name: matchingCountry.name, svg:matchingCountry.svg});
+                    console.log("usersCountryFlagSVG:", usersCountryFlagSVG);
+                    console.log("countryFromAPI:", countryFromAPI);
                 }
                 console.log(`User's country: ${countryFromIP}`);
             })
@@ -50,46 +60,39 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
         } else {
             console.log("didn't work, or still waiting for IP API request");
         }
-    }, [userIP]);
+    }, [userIP, usersCountryFlagSVG]);
 
 // phoneNumber
 
-    const handlePhoneNumberClick = () => {
-        setPhoneNumberPlaceholder("");
-    };
+    const handleCountrySelect = (selectedOption) => {
+        setSelectedOption(selectedOption);  
+        setActualSelectedOption(true);
+        setPhoneNumber("");
+    }
 
-    const handlePhoneNumberBlur = () => {
-        if (phoneNumber === "") {
-            setPhoneNumberPlaceholder("Phone Number");
-        }
+    const handleSelectPhoneNumber = (e) => {
+        setPhoneNumber(e.target.value);
     };
 
 // Error Messages
 
-    const phoneNumberEmpty = () => setIsPhoneNumberEmpty(true);
-
-    const incorrectFormat = () => setIsIncorrectFormat(true);
-
-    const alreadyRegistered = () => setIsAlreadyRegistered(true);
+    const setError = errorType => setErrorCondition(errorType);
 
 // Handle Next Click
 
     const handleNextClick = () => {
-        setIsPhoneNumberEmpty(false);
-        setIsIncorrectFormat(false);
-        setIsAlreadyRegistered(false);
-        if (phoneNumber === '') {
         const phoneNumberInput = document.getElementById('phoneNumberInput');
-        phoneNumberEmpty();
+        if (phoneNumber === '') {
+        setError("phoneNumberEmpty");
         phoneNumberInput.focus();
-        } else if (!/^[a-zA-Z0-9.]+$/.test(phoneNumber)) {
+        } else if (/[^0-9]/.test(phoneNumber)) {
         // Check if the phoneNumber contains unallowed characters
-        incorrectFormat();
-        console.log('correct regex')
+        setError("incorrectFormat");
+        phoneNumberInput.focus();
         } else {
                 const isPhoneNumberAlreadyRegistered = users.some(user => user.phoneNumber === phoneNumber);
                 if(isPhoneNumberAlreadyRegistered) {
-                    alreadyRegistered();    
+                    setError("alreadyRegistered");    
                 } else {
             updateUser({ phoneNumber: phoneNumber })
             setPhoneNumber('');
@@ -98,18 +101,14 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
         }
     };
 
-// Custom Components
+// Custom React Select Components
 
-    const CustomDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
-        const defaultColor = '#000';
+    const customDropdownIndicator = ({ menuIsOpen, innerProps, ...rest }) => {
     
         return (
         <components.DropdownIndicator {...innerProps} { ...rest }>
             <img
-            src={dropDownImageSVG}
-            alt="Dropdown Indicator"
-            className={`svg dropdown-indicator ${menuIsOpen ? 'open' : ''}`}
-            style={{ fill: defaultColor }}
+                src={dropDownImageSVG}
             />
         </components.DropdownIndicator>
         );
@@ -118,12 +117,17 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
     const chosenCountryFlagImage = ({ children, ...props }) => {
         return (
         <components.SingleValue {...props}>
-            <img
-                src={require(`../images/flags/${props.data.value.svg}`)}
-                className="flag-image"
-                alt={`${props.data.value.name} flag`}
-                id="react-select-2-placeholder"
-            />
+            {props.data && props.data.value ? (
+                <img
+                    src={require(`../images/flags/${props.data.value.svg}`)}
+                    className="flag-image"
+                    alt={`${props.data.value.name} flag`}
+                    style={{ 
+                        marginLeft: '14px',
+                        marginBottom: '2px',
+                    }}
+                />
+            ) : null}
         </components.SingleValue>
         );
     };
@@ -138,7 +142,7 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
         container: provided => ({
             ...provided,
             width: '103px',
-            marginLeft: '3px',
+            margin: '2px 0 0 3px',
         }),
         control: (provided, state) => ({
             ...provided,
@@ -160,16 +164,6 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
             transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null,
             padding: '0px',
             justifyContent: 'center',
-            ':hover': {
-                // Add styles for hover here
-                // For example, you can change the color on hover:
-                fill: '#ff0000', // Change this to your desired color
-              },
-              '&.menu-is-open': {
-                // Add styles for when the menu is open here
-                // For example, you can change the color when the menu is open:
-                fill: '#00ff00', // Change this to your desired color
-              },
         }),
         indicatorSeparator: provided => ({
             ...provided,
@@ -201,13 +195,16 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
             marginTop: '2px',
             minHeight: "100%",
             minWidth: "100%",
+            display: 'flex',
+            flexWrap: 'nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
         }),
-    }
-  
-// Handle Skip
-
-    const handleSkip = () => navigate('/review-your-account-info');
-
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused ? '#deebff' : '',
+        }),
+    };
 
 // Placeholder Content
 
@@ -227,31 +224,109 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
         />
     );
 
+// Custom Options
+
+    
+
+    useEffect(() => {
+        const newTopOption = selectedOption ? selectedOption.value : (countries.find(country => country.svg === countryFromAPI.svg) || { name: "United Kingdom" }).name;
+        setTopOption(newTopOption);
+        const newFilteredCountries = countries.filter(country => country.name !== newTopOption.name);
+        setFilteredCountries(newFilteredCountries);
+    }, [selectedOption, countries, countryFromAPI]);
+
+    useEffect(() => {
+    if (countryFromAPI) {
+        const countryOption = countries.find(country => country.svg === countryFromAPI.svg);
+        if (countryOption) {
+            setSelectedOption({
+                value: countryOption,
+                label: countryOption.name
+            });
+        }
+    }
+}, [countryFromAPI, countries]);
+
+    const logValues = () => {
+        console.log("selectedOption.value.svg:", selectedOption && selectedOption.value ? selectedOption.value.svg : 'null');
+        console.log("selectedOption.value.name:", selectedOption && selectedOption.value ? selectedOption.value.name : 'null');
+        console.log("usersCountryFlagSVG:", usersCountryFlagSVG);
+    };
+
+    const customOptions = [
+        // top option
+        {
+            value: topOption,
+            label: (
+                <div>
+                {logValues()}
+                {selectedOption ? (
+                    <img
+                        src={require(`../images/flags/${selectedOption.value.svg || 'gb2.svg'}`)}
+                        className="flag-image"
+                        alt={`${selectedOption.value.name} flag`}
+                        width="24"
+                        height="16"
+                    />
+                ) : (
+                    <img
+                        src={require(`../images/flags/${countryFromAPI.svg || 'gb2.svg'}`)}
+                        className="flag-image"
+                        alt={`${countryFromAPI.name || 'GB'} flag`}
+                        width="24"
+                        height="16"
+                    />
+                )}
+                <span className='country-option'>
+                    {selectedOption && selectedOption.value ? (
+                        `${selectedOption.value.name} (${selectedOption.value.dialingCode})`
+                    ) : (
+                        `${usersCountryFlagSVG ? countries.find(country => country.svg === usersCountryFlagSVG).name : 'United Kingdom'} (${usersCountryFlagSVG ? countries.find(country => country.svg === usersCountryFlagSVG).dialingCode : '+44'})`
+                    )}
+                </span>
+                </div>
+            ),
+        },
+        // Add the rest of the countries
+        ...filteredCountries.map((country) => ({
+            value: country,
+            label: (
+                <div>
+                    <img
+                    src={require(`../images/flags/${country.svg}`)}
+                    className="flag-image"
+                    alt={`${country.name} flag`}
+                    width="24"
+                    height="16"
+                    />
+                    <span className='country-option'>
+                        {country.name} ({country.dialingCode})
+                    </span>
+                </div>
+            ),
+        })),
+    ];
+
     return (
         <>
             <ConfirmYoureNotARobotComponent
                 value={phoneNumber}
                 setValue={setPhoneNumber}
-                handlePhoneNumberClick={handlePhoneNumberClick}
-                handlePhoneNumberBlur={handlePhoneNumberBlur}
-                phoneNumberPlaceholder={phoneNumberPlaceholder}
                 handleNextClick={handleNextClick}
-                handleSkip={handleSkip}
-                isPhoneNumberEmpty={isPhoneNumberEmpty}
                 isImagePreloaded={isImagePreloaded}
-                isIncorrectFormat={isIncorrectFormat}
-                isAlreadyRegistered={isAlreadyRegistered}
                 customOptions={customOptions}
                 countries={countries}
                 customStyles={customStyles}
                 userIP={userIP}
-                usersCountryFlagSVG={usersCountryFlagSVG}
-                CustomDropdownIndicator={CustomDropdownIndicator}
+                customDropdownIndicator={customDropdownIndicator}
                 chosenCountryFlagImage={chosenCountryFlagImage}
-                setPhoneNumber={setPhoneNumber}
                 placeholderContent={placeholderContent}
-                setSelectedOption={setSelectedOption}
                 selectedOption={selectedOption}
+                handleSelectPhoneNumber={handleSelectPhoneNumber}
+                isImageLoaded={isImageLoaded}
+                handleCountrySelect={handleCountrySelect}
+                errorCondition={errorCondition}
+                actualSelectedOption={actualSelectedOption}
             />
         </>
     )

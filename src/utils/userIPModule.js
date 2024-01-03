@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-let userIP = '';
-
 export const useUserIP = () => {
   const [loading, setLoading] = useState(true);
+  const [userIP, setUserIP] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:3001/get-user-ip')
       .then((response) => {
-        userIP = response.data.userIpAddress;
+        setUserIP(response.data.userIpAddress);
         setLoading(false);
       })
       .catch((error) => {

@@ -1507,33 +1507,50 @@ export const countries = [
 
 function populateSvgForCountries(countries) {
     for (const country of countries) {
-      // Assuming 'abbreviation' is available and 'svg' is missing.
       if (country.abbreviation && !country.svg) {
         country.svg = `${country.abbreviation}.svg`;
       }
     }
 }
 
+// Sorts
+
 countries.sort((a, b) => a.name.localeCompare(b.name));
+
+// Populates
 
 populateSvgForCountries(countries);
 
+// Filter
+
 export const filteredCountries = countries.filter(country => country.dialingCode !== '');
 
-export const customOptions = filteredCountries.map((country) => ({
-      value: country,
-      label: (
-        <div>
-            <div className="flex">
+export const customOptions = [
+    // Add your placeholder option here
+    {
+        value: 'placeholder',
+        label: (
+            <span className='country-option'>
+                'Select a country...'
+            </span>
+        )
+    },
+    // Add the rest of the countries
+    ...filteredCountries.map((country) => ({
+        value: country,
+        label: (
+            <div>
                 <img
-                    src={require(`../images/flags/${country.svg}`)}
-                    className="flag-image"
-                    alt={`${country.name} flag`}
+                src={require(`../images/flags/${country.svg}`)}
+                className="flag-image"
+                alt={`${country.name} flag`}
+                width="24"
+                height="16"
                 />
                 <span className='country-option'>
                     {country.name} ({country.dialingCode})
                 </span>
             </div>
-        </div>
-      ),
-}));
+        ),
+    })),
+];

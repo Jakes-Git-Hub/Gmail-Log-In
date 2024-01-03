@@ -24,14 +24,14 @@ function App() {
 // Test
 
 useEffect(() => { 
-  setUsers(prevUsers => [...prevUsers, { id: 0, email: 'tester@gmail.com', password: 'test' }]);
+  setUsers(prevUsers => [...prevUsers, { id: 0, email: 'tester@gmail.com', password: 'test', phoneNumber: "07720761143" }]);
 }, []);
 
 // Grab User's IP
 
 const { userIP } = useUserIP()
 
-// Handle Log In
+// Handle Log Ins
 
   const handleLogin = (email, password) => {
     console.log("Attempting login with:", email, password);
@@ -114,12 +114,11 @@ const { userIP } = useUserIP()
           } 
         />
         <Route path="/confirm-youre-not-a-robot" element={
-            <StaticElementContainer>
-              <ConfirmYoureNotARobotContainer
-                updateUser={updateUser}
-                userIP={userIP}
-              />
-            </StaticElementContainer>
+            <ConfirmYoureNotARobotContainer
+              updateUser={updateUser}
+              userIP={userIP}
+              users={users}
+            />
           } 
         />
         <Route path="/add-recovery-email" element={

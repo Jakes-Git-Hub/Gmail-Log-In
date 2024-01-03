@@ -902,6 +902,12 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: -17.5px 29px 0  0;
 }
 
+#error-div-space-cynar {
+  width: 90%;
+  margin-top: 6px;
+  flex-wrap: nowrap;
+}
+
 /* Add Recovery Email */
 
 .error-div-add-recovery-email {
@@ -1060,8 +1066,21 @@ input[type="number"]::-webkit-outer-spin-button {
 .country-option {
   font-size: 1rem;
   color: rgb(60,64,67);
+  margin: 2px 0;
 }
 
-/* .flex {
-  display: ;
-} */
+.css-1pnmrwp-MuiTypography-root {
+  color: rgba(0, 0, 0, 0.87) !important;
+  margin-top: 2.5px !important;
+}
+
+#button-right-robot {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin: 20px 0 132.5px 0;
+}
+
+#react-select-2-option-0 {
+  border-bottom: 1.5px solid #dadce0dd !important;
+}
