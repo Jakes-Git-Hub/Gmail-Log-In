@@ -902,10 +902,63 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: -17.5px 29px 0  0;
 }
 
+.separator {
+  border-bottom: 1px solid rgb(224 224 224); /* Customize the separator style */
+  padding: 0 !important; /* Adjust the margin as needed */
+  width: 100%;
+  height: 2px !important;
+}
+
+.flag-image {
+  margin-right: 12px;
+}
+
+.country-option {
+  font-size: 1rem;
+  color: rgb(60,64,67);
+  margin: 2px 0;
+}
+
+.css-1pnmrwp-MuiTypography-root {
+  color: rgba(0, 0, 0, 0.87) !important;
+  margin-top: 2.5px !important;
+}
+
+#button-right-robot {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin: 20px 0 132.5px 0;
+}
+
+#button-right-robot-confirm {
+  display: flex;
+  width: 363px;
+  justify-content: flex-end;
+  margin: 40px 0 68.5px 0;
+}
+
+#react-select-2-option-0 {
+  border-bottom: 1.5px solid #dadce0dd !important;
+}
+
 #error-div-space-cynar {
   width: 90%;
   margin-top: 6px;
   flex-wrap: nowrap;
+}
+
+.custom-code-input{
+  font-family: "Noto Sans", sans-serif;
+}
+
+#verification-code-cynar {
+  margin-top: 25px;
+}
+
+.react-code-input input:focus {
+  border: 2px solid #1976d2 !important;
+  outline: none !important;
 }
 
 /* Add Recovery Email */
@@ -1052,35 +1105,3 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 92%;
 }
 
-.separator {
-    border-bottom: 1px solid rgb(224 224 224); /* Customize the separator style */
-    padding: 0 !important; /* Adjust the margin as needed */
-    width: 100%;
-    height: 2px !important;
-}
-
-.flag-image {
-  margin-right: 12px;
-}
-
-.country-option {
-  font-size: 1rem;
-  color: rgb(60,64,67);
-  margin: 2px 0;
-}
-
-.css-1pnmrwp-MuiTypography-root {
-  color: rgba(0, 0, 0, 0.87) !important;
-  margin-top: 2.5px !important;
-}
-
-#button-right-robot {
-  display: flex;
-  width: 363px;
-  justify-content: flex-end;
-  margin: 20px 0 132.5px 0;
-}
-
-#react-select-2-option-0 {
-  border-bottom: 1.5px solid #dadce0dd !important;
-}

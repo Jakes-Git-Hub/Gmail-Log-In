@@ -30,27 +30,41 @@ const accountSid = 'AC6a9daf79d9a01cb2499f732adba298c5';
 const authToken = 'f723349a790c615be5cf83cd525d276a';
 const twilioPhoneNumber = '+447893941852';
 
-const client = new twilio(accountSid, authToken);
+const client = twilio(accountSid, authToken);
 
 // Endpoint to send verification code via SMS
 app.post('/send-verification-code', async (req, res) => {
-  const { phoneNumber } = req.body;
+  console.log('Endpoint reached: /send-verification-code');
+  const { formattedPhoneNumber } = req.body;
+
+  // Log the received data
+  console.log('Received request with formattedPhoneNumber:', formattedPhoneNumber);
 
   try {
     // Generate a random verification code
-    const verificationCode = Math.floor(1000 + Math.random() * 9000);
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
 
     // Send SMS using Twilio
     await client.messages.create({
       body: `Your verification code is: ${verificationCode}`,
       from: twilioPhoneNumber,
-      to: phoneNumber,
+      to: formattedPhoneNumber,
+    })
+    .then(message => {
+      console.log('Twilio API call successful:', message.sid);
+      console.log('Verification code:', verificationCode)
+      res.json({ 
+        sid: message.sid,
+        verificationCode: verificationCode,
+      });
+    })
+    .catch(error => {
+      console.error('Twilio API call error:', error.response.data);
+      res.status(500).json({ error: 'Internal Server Error' });
     });
 
-    res.json({ success: true, verificationCode });
   } catch (error) {
-    console.error('Error sending SMS:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    console.error('Error in try-catch block:', error.response.data);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-

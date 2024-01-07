@@ -5,6 +5,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import googleWritingSvg from "../images/google-writing-svg.svg";
 import InputAdornment from "@mui/material/InputAdornment";
+import CodeInput from 'react-code-input';
+import CustomNextButton from './CustomNextButton';
+
+
 
 export const ConfirmYoureNotARobotComponent = ({ 
     phoneNumber,
@@ -21,6 +25,10 @@ export const ConfirmYoureNotARobotComponent = ({
     handleCountrySelect,
     errorCondition,
     actualSelectedOption,
+    handleUserVerificationCodeInput,
+    userInputtedVerificationCode,
+    showVerificationCodeInput,
+    formattedPhoneNumber,
 }) => {
 
     return (
@@ -60,6 +68,7 @@ export const ConfirmYoureNotARobotComponent = ({
                     <div class='line-height gender-input-width' id='phoneNumber-input-width'>
                         <Box>
                                 <TextField
+                                    autoFocus
                                     fullWidth error={errorCondition}
                                     id='phoneNumberInput'
                                     value={phoneNumber}
@@ -122,10 +131,41 @@ export const ConfirmYoureNotARobotComponent = ({
                     <p class='small-grey-cynar'>Google will verify this number via SMS (charges may apply).</p>
                 </div>
 
-                <div id='button-right-robot'>
-                    <button type='button' class="button-space-confirm-youre-not-a-robot blue-button" onClick={handleNextClick}>
-                        Next   
-                    </button>
+                <div style={{ display: showVerificationCodeInput ? "block" : "none" }} id="verification-code-cynar">
+                    <CodeInput
+                        className="code-input"
+                        type= "number"
+                        fields={6}
+                        value={userInputtedVerificationCode}
+                        onChange={handleUserVerificationCodeInput}
+                        inputStyle={{
+                            "MozAppearance": "textfield",
+                            "borderRadius": "4px",
+                            "border": "1px solid #dadce0",
+                            "margin": "4px 8px 4px 8px",
+                            "paddingLeft": "10.6px",
+                            "width": "36px",
+                            "height": "42px",
+                            "fontSize": "1.25rem",
+                            "boxSizing": "border-box",
+                            "color": "rgb(32,33,36)",
+                            "backgroundColor": "white",
+                        }}
+                    />
+                </div>
+                
+                <div id={formattedPhoneNumber ? 'button-right-robot-confirm' : "button-right-robot"}>
+                    <CustomNextButton 
+                        variant="contained" 
+                        onClick={handleNextClick}
+                        sx={{
+                            '&& .MuiTouchRipple-rippleVisible': {
+                                animationDuration: '300ms',
+                            },
+                        }}
+                    >
+                        Next
+                    </CustomNextButton>
                 </div>
 
             </form>

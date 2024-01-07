@@ -24,7 +24,7 @@ function App() {
 // Test
 
 useEffect(() => { 
-  setUsers(prevUsers => [...prevUsers, { id: 0, email: 'tester@gmail.com', password: 'test', phoneNumber: "07720761143" }]);
+  setUsers(prevUsers => [...prevUsers, { id: 0, email: 'tester@gmail.com', password: 'test', phoneNumber: "" }]);
 }, []);
 
 // Grab User's IP

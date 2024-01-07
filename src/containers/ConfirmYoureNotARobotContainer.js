@@ -12,6 +12,7 @@ import googleWritingSvg from "../images/google-writing-svg.svg";
 
 export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) => {
 
+    const [formattedPhoneNumber, setFormattedPhoneNumber] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [errorCondition, setErrorCondition] = useState(null);
     const [isImageLoaded, setIsImageLoaded] = useState(false);  
@@ -21,6 +22,9 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
     const [filteredCountries, setFilteredCountries] = useState(countries);
     const [topOption, setTopOption] = useState(null);
     const [countryFromAPI, setCountryFromAPI] = useState({});
+    const [userInputtedVerificationCode, setUserInputtedVerificationCode] = useState('');
+    const [showVerificationCodeInput, setShowVerificationCodeInput] = useState(false);
+    const [twilioVerificationCode, setTwilioVerificationCode] = useState('');
 
     const navigate = useNavigate();
 
@@ -65,7 +69,7 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
 // phoneNumber
 
     const handleCountrySelect = (selectedOption) => {
-        setSelectedOption(selectedOption);  
+        setSelectedOption(selectedOption);
         setActualSelectedOption(true);
         setPhoneNumber("");
     }
@@ -77,29 +81,6 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
 // Error Messages
 
     const setError = errorType => setErrorCondition(errorType);
-
-// Handle Next Click
-
-    const handleNextClick = () => {
-        const phoneNumberInput = document.getElementById('phoneNumberInput');
-        if (phoneNumber === '') {
-        setError("phoneNumberEmpty");
-        phoneNumberInput.focus();
-        } else if (/[^0-9]/.test(phoneNumber)) {
-        // Check if the phoneNumber contains unallowed characters
-        setError("incorrectFormat");
-        phoneNumberInput.focus();
-        } else {
-                const isPhoneNumberAlreadyRegistered = users.some(user => user.phoneNumber === phoneNumber);
-                if(isPhoneNumberAlreadyRegistered) {
-                    setError("alreadyRegistered");    
-                } else {
-            updateUser({ phoneNumber: phoneNumber })
-            setPhoneNumber('');
-            navigate('/add-recovery-email')
-            }
-        }
-    };
 
 // Custom React Select Components
 
@@ -226,17 +207,15 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
 
 // Custom Options
 
-    
-
     useEffect(() => {
         const newTopOption = selectedOption ? selectedOption.value : (countries.find(country => country.svg === countryFromAPI.svg) || { name: "United Kingdom" }).name;
         setTopOption(newTopOption);
         const newFilteredCountries = countries.filter(country => country.name !== newTopOption.name);
         setFilteredCountries(newFilteredCountries);
+        console.log("selectedOption:", selectedOption);
     }, [selectedOption, countries, countryFromAPI]);
 
     useEffect(() => {
-    if (countryFromAPI) {
         const countryOption = countries.find(country => country.svg === countryFromAPI.svg);
         if (countryOption) {
             setSelectedOption({
@@ -244,14 +223,7 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
                 label: countryOption.name
             });
         }
-    }
-}, [countryFromAPI, countries]);
-
-    const logValues = () => {
-        console.log("selectedOption.value.svg:", selectedOption && selectedOption.value ? selectedOption.value.svg : 'null');
-        console.log("selectedOption.value.name:", selectedOption && selectedOption.value ? selectedOption.value.name : 'null');
-        console.log("usersCountryFlagSVG:", usersCountryFlagSVG);
-    };
+    }, [countryFromAPI, countries]);
 
     const customOptions = [
         // top option
@@ -259,7 +231,6 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
             value: topOption,
             label: (
                 <div>
-                {logValues()}
                 {selectedOption ? (
                     <img
                         src={require(`../images/flags/${selectedOption.value.svg || 'gb2.svg'}`)}
@@ -307,6 +278,99 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
         })),
     ];
 
+// Handle Next Click
+
+    const handleNextClick = () => {
+        const phoneNumberInput = document.getElementById('phoneNumberInput');
+        if (phoneNumber === '') {
+        setError("phoneNumberEmpty");
+        phoneNumberInput.focus();
+        } else if (/[^0-9]/.test(phoneNumber)) {
+        // Check if the phoneNumber contains unallowed characters
+        setError("incorrectFormat");
+        phoneNumberInput.focus();
+        } else {
+            const isPhoneNumberAlreadyRegistered = users.some(user => user.phoneNumber === phoneNumber);
+            
+            if(isPhoneNumberAlreadyRegistered) {
+                setError("alreadyRegistered"); 
+            } else {
+                setFormattedPhoneNumber(selectedOption.value.dialingCode + phoneNumber);
+                setError(null);
+            }
+        }; 
+    };
+
+    //         } else {
+    //             updateUser({ phoneNumber: phoneNumber })
+    //             setPhoneNumber('');
+    //             console.log("phoneNumber:", phoneNumber);   
+    //             navigate('/add-recovery-email');
+    //         }
+    //     }
+    // };
+    
+    useEffect(() => {
+        const sendVerificationCode = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/send-verification-code', {
+                    formattedPhoneNumber: formattedPhoneNumber,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                const data = response.data;
+    
+                if (data.verificationCode) {
+                    // Extract the verification code from the Twilio response
+                    const verificationCode = data.verificationCode.toString();
+    
+                    // Set the verification code in the state
+                    setTwilioVerificationCode(verificationCode);
+    
+                    console.log('Verification code sent successfully:', verificationCode);
+                    // Proceed to the next step or navigate to the next page
+                } else {
+                    if (data.error) {
+                        console.error('Error sending verification code:', data.error);
+                        // Display an error message or take appropriate action
+                    } else {
+                        console.error('Unknown error sending verification code');
+                    }
+                }
+            } catch (error) {
+                console.error('Error sending verification code:', error);
+                // Handle the case where there was a network error or any other unexpected error
+            }
+        };
+    
+        if (formattedPhoneNumber) {
+            sendVerificationCode();
+            setShowVerificationCodeInput(true);
+        }
+    }, [formattedPhoneNumber]);
+
+    useEffect(() => {
+        console.log("formattedPhoneNumber:", formattedPhoneNumber);
+    }, [formattedPhoneNumber]);
+
+// Verification Code (Twilio SMS)
+
+    const handleUserVerificationCodeInput = (userInputtedVerificationCode) => {
+        setUserInputtedVerificationCode(userInputtedVerificationCode);
+        console.log("userInputtedVerificationCode:", userInputtedVerificationCode);
+    }
+
+    useEffect(() => {
+        if (userInputtedVerificationCode === twilioVerificationCode) {
+            updateUser({ phoneNumber: formattedPhoneNumber });
+            setUserInputtedVerificationCode('');
+            // navigate('/add-recovery-email');
+        }
+    }, [userInputtedVerificationCode]);
+
     return (
         <>
             <ConfirmYoureNotARobotComponent
@@ -327,8 +391,11 @@ export const ConfirmYoureNotARobotContainer = ({ updateUser, users, userIP }) =>
                 handleCountrySelect={handleCountrySelect}
                 errorCondition={errorCondition}
                 actualSelectedOption={actualSelectedOption}
+                handleUserVerificationCodeInput={handleUserVerificationCodeInput}
+                userInputtedVerificationCode={userInputtedVerificationCode}
+                showVerificationCodeInput={showVerificationCodeInput}
+                formattedPhoneNumber={formattedPhoneNumber}
             />
         </>
     )
-    
 }
